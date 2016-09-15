@@ -1,0 +1,31 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file            controllers.Assets.at(path="/public", file)
+GET         /login                   controllers.LoginAction.login()
+POST        /login                   controllers.LoginAction.postLogin()
+
+
+GET         /getNodeData             controllers.ZkNodeAction.get()
+
+POST        /deleteNode              controllers.ZkNodeAction.delete(path:String)
+POST        /addNode                 controllers.ZkNodeAction.add()
+POST        /updateNode              controllers.ZkNodeAction.update()
+
+GET       /client/detail           controllers.ZkClusterAction.clientDetail(zkHostName:String,zkPort:String)
+
+
+GET         /cluster/get             controllers.ZkClusterAction.get()
+POST        /cluster/register        controllers.ZkClusterAction.register()
+POST        /cluster/update          controllers.ZkClusterAction.update()
+POST        /cluster/delete          controllers.ZkClusterAction.delete()
+
+GET         /tree/xml                controllers.ZkNodeAction.tree()
+GET         /tree/view               controllers.ZkNodeAction.treeView(hostName:String,port:String)
+GET         /currentNode             controllers.ZkNodeAction.currentNode()
+#GET         /treeView                controllers.ZkNodeAction.getTreeView()
+

@@ -1,0 +1,44 @@
+@*@(title:String)*@
+@*<!DOCTYPE html>*@
+@*<html lang="en">*@
+@*@head(title)*@
+
+@*<style>*@
+@*.index_content {*@
+@*position: relative;*@
+@*margin-top: 60px;*@
+@*margin-left: 0px;*@
+@*width:1800px;*@
+@*height:800px;*@
+@*}*@
+@*</style>*@
+@*<body>*@
+  @*<div class="container-fluid">*@
+    @*@navbar()*@
+    @*<div id="index_content" class="index_content">*@
+      @*<div id="tree_struct" style="width:100%;height:100%"></div>*@
+    @*</div>*@
+  @*</div>*@
+@*</body>*@
+  @*<script type="text/javascript">*@
+       @*$(document).ready(function(){*@
+            @*var myLayout = new dhtmlXLayoutObject("index_content", "2U");*@
+            @*var myTree = new dhtmlXTreeObject("tree_struct","100%","100%",0);*@
+            @*myTree.setImagePath("assets/javascripts/dhtmlx_std_full/imgs/dhxtree_skyblue/");*@
+			@*myTree.enableSmartXMLParsing(true);*@
+			@*//console.log("==load tree view ==");*@
+			@*myTree.load("./zkNodes");*@
+
+            @*myLayout.cells("a").setText("ZK节点列表");*@
+            @*myLayout.cells("a").setWidth(500);*@
+            @*myLayout.cells("a").attachObject("tree_struct");*@
+            @*myLayout.cells("b").setText("节点信息");*@
+            @*myTree.setOnClickHandler(getNodeData);*@
+
+            @*function getNodeData(id){*@
+                @*//console.log("id = " + id);*@
+                @*myLayout.cells("b").attachURL("./getNodeData?path="+id);*@
+            @*}*@
+         @*});*@
+  @*</script>*@
+@*</html>*@

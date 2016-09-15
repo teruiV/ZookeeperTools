@@ -1,0 +1,50 @@
+.field-detail-tips{
+    color:#DDDDDD;
+    font-size:14px;
+    padding-left:5px;
+}
+
+.nav-btn{
+    color:#999;
+    text-decoration:none
+}
+
+.nav-btn:link{
+    color:#999;
+    text-decoration:none
+}
+
+.nav-btn:visited{
+    color:#999;
+    text-decoration:none
+}
+
+.nav-btn:hover{
+    color: #ffffff;
+    text-decoration:none
+}
+.nav-btn:active{
+    color:#999;
+    text-decoration:none
+}
+
+.view-btn-a{
+    color:#3c3c3c;
+    text-decoration:none
+}
+.view-btn-a:visited{
+    color:#3c3c3c;
+    text-decoration:none
+}
+.view-btn-a:hover{
+    color:#3c3c3c;
+    text-decoration:none
+}
+.view-btn-a:active{
+    color:#3c3c3c;
+    text-decoration:none
+}
+.view-btn-a:link{
+    color:#3c3c3c;
+    text-decoration:none
+}

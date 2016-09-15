@@ -1,0 +1,173 @@
+@(registerHostName:String)
+<div class="navbar  navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <img id="logo" width="50%"  style="height:51px;width:280px" src="@routes.Assets.at("images/banner_zk.png")">
+    </div>
+
+@*    <button class="navbar-nav navbar-inverse navbar-brand navbar-left" style="margin-left: 0px" id="switch_zk">切换ZK</button>*@
+      <button class="navbar-nav navbar-inverse navbar-brand navbar-left nav-btn" style="margin-left: 0px" id="register_cluster_btn">注册ZK集群</button>
+    @*  <button class="navbar-nav navbar-inverse navbar-brand navbar-left" style="margin-left: 0px" ><a class="nav-btn" href="@routes.ZkNodeAction.currentNode()">当前集群</a></button>*@
+      <button class="navbar-nav navbar-inverse navbar-brand navbar-left" style="margin-left: 0px" ><a class="nav-btn" href="@routes.ZkClusterAction.get()">集群概况</a></button>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+
+        <li><a style="color: #999;" href="#">我的设置</a></li>
+        <li><a style="color: #999;" href="#">
+
+      </a></li>
+        <li><a style="color: #999;" href="#">登出</a></li>
+      </ul>
+      <form class="navbar-form navbar-right" id="global_search_form">
+        <input type="text" class="form-control" placeholder="Search..." id="global_search_input">
+      </form>
+    </div>
+  </div>
+</div>
+@*
+@modal("switch_zk_modal","切换ZK"){
+  <form method="post" action="@routes.ZkNodeAction.switchZk()" onsubmit="return check_input()">
+
+    <div class="alert alert-danger" role="alert" id="switch_error" style="display:none"></div>
+    <div class="form-group">
+      <label for="hostname">域名</label>
+      <input type="text" class="form-control" name="hostname" id="hostname" autocomplete="off" placeholder="xxx.xxx.xxx.xxx" value="">
+    </div>
+
+    <div class="form-group">
+      <label for="port">端口</label>
+      <input type="text" class="form-control" name="port" id="port" autocomplete="off" placeholder="xxxx" value="">
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="switch_comfire" type="submit">确认</button>
+      <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+    </div>
+  </form>
+}
+*@
+
+@modal("cluster_register_modal","注册ZK"){
+    <div class="alert alert-danger" role="alert" id="register_error" style="display:none"></div>
+    <form method="post" action="@routes.ZkClusterAction.register()" onsubmit="return check_register()">
+
+        <div class="form-group">
+            <label for="hostName">HostName<span class="field-detail-tips">注册IP地址如： 192.168.180.78</span></label>
+            <input type="text" class="form-control" id="register_hostname"  autocomplete="off" name="hostName" value="">
+        </div>
+
+        <div class="form-group">
+            <label for="port">Port<span class="field-detail-tips">注册端口如： 2181</span></label>
+            <input type="text" class="form-control" id="register_port"  autocomplete="off"  name="port" value="">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description<span class="field-detail-tips">ZK集群描述如： 线上ZK集群</span></label>
+            <input type="text" class="form-control" id="register_description"  autocomplete="off" name="description" value="">
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="delete_comfire" type="submit">确认</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+        </div>
+    </form>
+}
+
+  <script type="text/javascript">
+
+ $(document).ready(function(){
+    $("#switch_zk").click(function(){
+        init_modal();
+        $("#switch_zk_modal").modal('show');
+    });
+
+    register_zk();
+ });
+
+
+  function exist_host_name(hostname){
+    var register_host_name = "@registerHostName";
+    var exist = false;
+    if(register_host_name != ""){
+        $.each(register_host_name.split(","),function(index,e){
+            console.log("e = " + e + "flag = " + (e == hostname));
+            if(e == hostname) return exist = true;
+        });
+    }
+    return exist;
+  }
+
+ function check_register(){
+    var hostname = $("#register_hostname").val() ;
+    var port = $("#register_port").val();
+    if(hostname == ""){
+        $("#register_error").html("hostname 不能为空");
+        $("#register_error").css("display","block");
+        return false;
+    }else if(exist_host_name(hostname)){
+        $("#register_error").html("hostname已经注册");
+        $("#register_error").css("display","block");
+        return false;
+    }else if(hostname.split(".").length != 4){
+        $("#register_error").html("hostname 格式不正确");
+        $("#register_error").css("display","block");
+        return false;
+    }
+
+    if(port == ""){
+        $("#register_error").html("port 不能为空");
+        $("#register_error").css("display","block");
+        return false;
+    }
+
+    return true;
+ }
+
+     function register_zk(){
+        $("#register_cluster_btn").click(function(){
+        $("#cluster_register_modal").modal("show");
+        init_cluster_register_modal();
+     });
+     }
+
+    function init_cluster_register_modal(){
+           $("#register_hostname").val("");
+           $("#register_port").val("");
+           $("#register_description").val("");
+           $("#register_error").css("display","none");
+      }
+
+   function init_modal(){
+        $("#hostname").val("");
+        $("#port").val("");
+        $("#switch_error").css("display","none");
+     }
+
+
+    function check_input(){
+               var hostname = $("#hostname").val();
+               var port = $("#port").val();
+
+                if(hostname == "") {
+                  $("#switch_error").html("域名不为空")
+                  $("#switch_error").css("display","block");
+                  return false ;
+                }else if(hostname.split("\.").length != 4){
+                  $("#switch_error").html("域名格式错误");
+                  $("#switch_error").css("display","block");
+                  return false ;
+                }else if(port == "") {
+                  $("#switch_error").html("端口不为空")
+                  $("#switch_error").css("display","block");
+                  return false;
+                }
+                return true;
+    }
+  </script>

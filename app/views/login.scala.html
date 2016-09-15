@@ -1,0 +1,29 @@
+<html>
+    @head("login")
+    <body>
+        <div id="main_content" class="col-md-6 col-md-offset-4 main">
+            <div class="row">
+                <div class="container col-md-10 table-bordered img-rounded" style="padding:50px;box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form role="form" action="@routes.LoginAction.login()" method="POST">
+                                <legend>ZK监控系统登录</legend>
+                                <div class="form-group">
+                                    <label for="admin_username">帐号</label>
+                                    <input type="email" name="username" class="form-control" id="admin_username" placeholder="Enter your email account" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin_password">密码</label>
+                                    <input type="password"  name="password" class="form-control" id="admin_password" placeholder="Password">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+

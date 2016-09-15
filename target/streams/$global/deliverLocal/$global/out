@@ -1,0 +1,4 @@
+[0m[[0minfo[0m] [0m:: delivering :: zk_monitor#zk_monitor_2.10;1.0-SNAPSHOT :: 1.0-SNAPSHOT :: integration :: Fri Jan 22 16:09:50 CST 2016[0m
+[0m[[0mdebug[0m] [0m	options = status=integration pubdate=Fri Jan 22 16:09:50 CST 2016 validate=true resolveDynamicRevisions=true merge=true resolveId=null pubBranch=null[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to D:\work\git-repo\tamer\target\scala-2.10\ivy-1.0-SNAPSHOT.xml[0m
+[0m[[0mdebug[0m] [0m	deliver done (69ms)[0m

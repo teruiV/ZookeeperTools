@@ -1,0 +1,146 @@
+@(zkClusterList:List[com.mob.hubble.domain.ZkCluster],registerHostName:String)
+<!DOCTYPE html>
+<html lang="en">
+@head("ZK集群信息")
+<body>
+    <div class="container-fluid">
+        @navbar(registerHostName)
+        <div style="margin:50px ">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>IP地址</th>
+                        <th>端口</th>
+                        <th>描述</th>
+                        <th>主/从模式</th>
+                        <th>连接数</th>
+                        <th>节点数</th>
+                        <th>发送包(byte)</th>
+                        <th>已接收包(byte)</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if(zkClusterList != null){
+                    @for(zkCluster <- zkClusterList){
+                        <tr>
+                            <td id="zk_hostname">@zkCluster.getHostName</td>
+                            <td>@zkCluster.getPort</td>
+                            <td>@zkCluster.getDescription</td>
+                            <td>@zkCluster.getMode</td>
+                            <td>@zkCluster.getConnections</td>
+                            <td>@zkCluster.getNodeCount</td>
+                            <td>@zkCluster.getSend</td>
+                            <td>@zkCluster.getReceived</td>
+                            <td>@zkCluster.getStatus</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default">
+                                        <a class="view-btn-a" href="@routes.ZkNodeAction.treeView(zkCluster.getHostName,zkCluster.getPort)">集群节点</a>
+                                    </button>
+                                    <button type="button" id="cluster_update_btn_@zkCluster.getId" cluster_id="@zkCluster.getId" port="@zkCluster.getPort" hostname="@zkCluster.getHostName" description="@zkCluster.getDescription" class="btn btn-default">修改</button>
+                                    <button type="button" id="cluster_delete_btn_@zkCluster.getId" data="@zkCluster.getId" class="btn btn-default">删除</button>
+                                    <button type="button" class="btn btn-default"><a class="view-btn-a" href="@routes.ZkClusterAction.clientDetail(zkCluster.getHostName,zkCluster.getPort)">客户端详情</a></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @modal("cluster_delete_modal","删除ZK"){
+        <form method="post" action="@routes.ZkClusterAction.delete()">
+            是否移除ZK？
+            <input type="hidden" name="id" id="delete_id" value="">
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="delete_comfire" type="submit">确认</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+            </div>
+        </form>
+    }
+
+    @modal("cluster_update_modal","修改ZK"){
+        <div class="alert alert-danger" role="alert" id="update_cluster_error" style="display:none"></div>
+        <form method="post" action="@routes.ZkClusterAction.update()" onsubmit="return check_update_cluster()">
+
+            <div class="form-group">
+                <label for="hostName">hostName</label>
+                <input type="text" class="form-control" id="update_hostname"  autocomplete="off" name="hostName" value="" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="port">port</label>
+                <input type="text" class="form-control" id="update_port"  autocomplete="off"  name="port" value="" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="description">description</label>
+                <input type="text" class="form-control" id="update_description"  autocomplete="off" name="description" value="">
+            </div>
+
+            <input type="hidden" name="id" autocomplete="off" id="update_id" value="">
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="delete_comfire" type="submit">确认</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+            </div>
+        </form>
+    }
+
+
+
+  <script type="text/javascript">
+
+      function check_update_cluster(){
+        var port = $("#update_port").val();
+        if(port == "") {
+             $("#update_cluster_error").html("port 不能为空");
+             $("#update_cluster_error").css("display","block");
+             return false;
+        }
+        return true;
+      }
+
+
+      function delete_zk(){
+        $("[id^=cluster_delete_btn]").click(function(){
+            $("#cluster_delete_modal").modal('show');
+            var id = $(this).attr('data');
+            console.log("==== delete id = " + id);
+            $("#delete_id").val(id);
+        });
+      }
+
+      function update_zk(){
+         $("[id^=cluster_update_btn]").click(function(){
+            $("#cluster_update_modal").modal('show');
+            $("#update_cluster_error").css("display","none");
+            var id = $(this).attr("cluster_id");
+            var hostName = $(this).attr("hostname");
+            var port = $(this).attr("port");
+            var description = $(this).attr("description");
+            console.log("[update] hostName = " + hostName + " port = " + port + " hostName = " + hostName);
+
+            $("#update_id").val(id);
+            $("#update_description").val(description);
+            $("#update_port").val(port);
+            $("#update_hostname").val(hostName);
+        });
+      }
+
+      $(document).ready(function(){
+             delete_zk();
+
+             update_zk();
+
+//             register_zk();
+      });
+
+  </script>
+
+</body>
+</html>

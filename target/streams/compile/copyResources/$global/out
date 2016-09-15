@@ -1,0 +1,6 @@
+[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
+[0m[[0mdebug[0m] [0m	(D:\work\git-repo\tamer\conf\application.conf,D:\work\git-repo\tamer\target\scala-2.10\classes\application.conf)[0m
+[0m[[0mdebug[0m] [0m	(D:\work\git-repo\tamer\conf\log4j.properties,D:\work\git-repo\tamer\target\scala-2.10\classes\log4j.properties)[0m
+[0m[[0mdebug[0m] [0m	(D:\work\git-repo\tamer\conf\META-INF,D:\work\git-repo\tamer\target\scala-2.10\classes\META-INF)[0m
+[0m[[0mdebug[0m] [0m	(D:\work\git-repo\tamer\conf\routes,D:\work\git-repo\tamer\target\scala-2.10\classes\routes)[0m
+[0m[[0mdebug[0m] [0m	(D:\work\git-repo\tamer\conf\META-INF\applicationContext.xml,D:\work\git-repo\tamer\target\scala-2.10\classes\META-INF\applicationContext.xml)[0m

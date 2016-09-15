@@ -1,0 +1,60 @@
+@(zkClientDetailList:List[domain.ZkClientDetail],registerHostName:String)
+<!DOCTYPE html>
+<html lang="en">
+    @head("Client Detail")
+    private String hostName;
+    private String port;
+    private Long send;
+    private Long received;
+    private Long establishTime;
+    private Long lastResponseTime;
+    private Long maxLatency;
+<body>
+    <div class="container-fluid">
+        @navbar(registerHostName)
+        <div style="margin:100px ">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>客户端IP地址</th>
+                        <th>端口</th>
+                        <th>发送包(byte)</th>
+                        <th>已接收包(byte)</th>
+                        <th>创建时间</th>
+                        <th>最后响应时间</th>
+                        <th>最大延时(ms)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if(zkClientDetailList != null){
+                    @for(zkClientDetail <- zkClientDetailList){
+                        <tr>
+                            <td id="client_hostname">@zkClientDetail.getHostName</td>
+                            <td>@zkClientDetail.getPort</td>
+                            <td>@zkClientDetail.getSend</td>
+                            <td>@zkClientDetail.getReceived</td>
+                            <td>@zkClientDetail.getEstablishTime</td>
+                            <td>@zkClientDetail.getLastResponseTime</td>
+                            <td>@zkClientDetail.getMaxLatency</td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+    <div class="alert alert-danger" role="alert" id="client_detail_error" style="display:none"></div>
+    </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+           var client_hostname_length= $("[id^=client_hostname]").length;
+           console.log("client_hostname_length = " + client_hostname_length);
+           if(client_hostname_length == 0){
+                $("#client_detail_error").html("没有连接该ZK集群的客户端");
+                $("#client_detail_error").css("display","block");
+           }
+        });
+    </script>
+
+</body>
+</html>

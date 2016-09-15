@@ -1,0 +1,254 @@
+@(zkNodeInfo:domain.ZkNodeInfo,allChildPath : String)
+<html>
+  @head("nodeInfo")
+<style>
+    .btn_init{
+        margin:0px;
+        padding: 0px;
+    }
+</style>
+<body>
+
+  <div class="alert alert-danger" role="alert" id="path" style="display:none"></div>
+  <div style="margin-top:20px ">
+      <div class="btn-group" role="group" style="margin: 10px">
+          <button  class="btn btn-default" id="add_btn"><span class="glyphicon glyphicon-plus"></span>添加节点</button>
+          <button  class="btn btn-default" id="delete_btn"><span class="glyphicon glyphicon-trash"></span>删除节点</button>
+          <button  class="btn btn-default" id="update_btn"><span class="glyphicon glyphicon-wrench"></span>修改节点</button>
+      </div>
+
+      <div style="margin: 10px">
+        <table class="table table-bordered">
+        @if(zkNodeInfo != null) {
+          <tr>
+            <th>path</th>
+            <td>@zkNodeInfo.getPath</td>
+          </tr>
+          <tr>
+            <th>data</th>
+            <td>@zkNodeInfo.getData</td>
+          </tr>
+          <tr>
+            <th>czxid</th>
+            <td>@zkNodeInfo.getCzxid</td>
+          </tr>
+          <tr>
+            <th>ctime</th>
+            <td>@zkNodeInfo.getCtime</td>
+          </tr>
+          <tr>
+            <th>version</th>
+            <td>@zkNodeInfo.getVersion</td>
+          </tr>
+          <tr>
+            <th>cversion</th>
+            <td>@zkNodeInfo.getCversion</td>
+          </tr>
+          <tr>
+            <th>aversion</th>
+            <td>@zkNodeInfo.getAversion</td>
+          </tr>
+          <tr>
+            <th>ephemeralOwner</th>
+            <td>@zkNodeInfo.getEphemeralOwner</td>
+          </tr>
+          <tr>
+            <th>dataLength</th>
+            <td>@zkNodeInfo.getDataLength</td>
+          </tr>
+          <tr>
+            <th>numChildren</th>
+            <td>@zkNodeInfo.getNumChildren</td>
+          </tr>
+          <tr>
+            <th>pzxid</th>
+            <td>@zkNodeInfo.getPzxid</td>
+          </tr>
+        }
+        </table>
+      </div>
+  </div>
+
+  @modal("delete_modal",zkNodeInfo.getPath){
+    <form method="post" action="@routes.ZkNodeAction.delete(zkNodeInfo.getPath)">
+      是否删除此节点？
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="delete_comfire" type="submit">确认</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+      </div>
+    </form>
+  }
+
+  @modal("add_modal",zkNodeInfo.getPath){
+    <form method="post" action="@routes.ZkNodeAction.add()" onsubmit="return check_add_modal()">
+      <div class="alert alert-danger" role="alert" id="add_error" style="display:none"></div>
+      <div class="form-group">
+        <label for="parentPath">parentPath</label>
+          @if( zkNodeInfo.getPath == "/"){
+            <input type="hidden" class="form-control" name="parentPath" value="@{zkNodeInfo.getPath}">
+            <input type="text" class="form-control" name="parentPath" value="@{zkNodeInfo.getPath}" disabled>
+          } else{
+          <input type="hidden" class="form-control" name="parentPath" value="@{zkNodeInfo.getPath}/">
+          <input type="text" class="form-control" name="parentPath" value="@{zkNodeInfo.getPath}/" disabled>
+          }
+      </div>
+
+      <div class="form-group">
+        <label for="childPath">childPath</label>
+        <input type="text" class="form-control"  name="childPath" autocomplete="off" id="childPath" value="">
+      </div>
+
+      <div class="form-group">
+        <label for="data">data</label>
+        <textarea type="text" class="form-control" autocomplete="off" name="data" id="add_data"></textarea>
+      </div>
+
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="add_comfire" type="submit">确认</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+      </div>
+    </form>
+  }
+
+  @modal("update_modal",zkNodeInfo.getPath){
+    <form method="post" action="@routes.ZkNodeAction.update()">
+      <div class="form-group">
+        <label for="path">path</label>
+        <input type="hidden" class="form-control" name="path" value="@{zkNodeInfo.getPath}/">
+        <input type="text" class="form-control" name="path" value="@{zkNodeInfo.getPath}" disabled>
+      </div>
+
+      <div class="form-group">
+        <label for="data">data</label>
+        <textarea type="text" class="form-control"  rows="5" cols="20"name="data" autocomplete="off" id="update_data"></textarea>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary"  type="submit">确认</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+      </div>
+    </form>
+  }
+
+
+  </body>
+
+<script type="text/javascript">
+      $(document).ready(function(){
+        var path = "@zkNodeInfo.getPath";
+
+
+        $("#delete_btn").click(function(){
+
+             if(path == "/"){
+//               alert("根路径不能删除" + path);
+               $("#path").css("display","block");
+               $("#path").html("根路径不能删除");
+               return;
+            }else if(path.indexOf("/zookeeper") != -1){
+//               alert("zookeeper目录下的节点不能删除" + path );
+              $("#path").css("display","block");
+              $("#path").html("zookeeper目录下的节点不能删除");
+               return;
+            }
+
+            $("#delete_modal").modal('show');
+            $("#delete_comfire").click(function(){
+                parent.location.reload();
+             });
+        });
+
+        $("#add_btn").click(function(){
+
+            if(path.indexOf("/zookeeper") != -1){
+               //alert("不能增加zookeeper目录下的节点" + path );
+               $("#path").css("display","block");
+               $("#path").html("不能增加zookeeper目录下的节点");
+               return;
+            }
+
+            add_modal_init();
+
+            $("#add_modal").modal('show');
+             $("#add_comfire").click(function(){
+               if(check_add_modal()){
+                parent.location.reload();
+               }
+          });
+        });
+
+        $("#update_btn").click(function(){
+
+            if(path == "/"){
+               //alert("根路径不能修改" + path)
+               $("#path").css("display","block");
+               $("#path").html("根路径不能修改");
+               return;
+            }else if(path.indexOf("/zookeeper") != -1){
+               //alert("zookeeper目录下的节点不能修改" + path );
+                $("#path").css("display","block");
+                $("#path").html("zookeeper目录下的节点不能修改");
+               return;
+            }
+            updata_modal_init();
+            $("#update_modal").modal('show');
+        });
+      });
+
+      function add_modal_init(){
+        $("#childPath").val("");
+        $("#add_data").val("");
+        $("#add_error").css('display','none');
+      }
+
+      function updata_modal_init(){
+        var data = "@zkNodeInfo.getData";
+        //转换引号转义字符
+        data = data.replace(/&quot;/g,"\"");
+
+        $("#update_data").val(data);
+
+        $("#add_error").css('display','none');
+//        console.log("data = " +$("#update_data").val());
+      }
+
+      function exist_new_node(childPath){
+
+        var allChildPath = "@allChildPath";
+        console.log("allChildPath = " + allChildPath);
+        var exist = false;
+        if(allChildPath != ""){
+          $.each(allChildPath.split(","),function(index,e){
+               if(childPath == e) return exist = true;
+          });
+        }
+        return exist ? true : false;
+      }
+
+      function check_add_modal(){
+         var childPath = $("#childPath").val();
+//         console.log("childPath = " + childPath);
+//         console.log("childPath = " + (childPath == ""));
+//         console.log(childPath.charAt(childPath.trim().length-1) =="/");
+         if(childPath == ""){
+            $("#add_error").html("新节点路径不能为空");
+            $("#add_error").css('display','block');
+            return false;
+         }else if(childPath.charAt(childPath.trim().length-1) =="/"){
+            $("#add_error").html("新路径不能以/结尾");
+            $("#add_error").css('display','block');
+            return false;
+         }else if(exist_new_node(childPath)){
+            $("#add_error").html("新节点已经存在,不能重复添加");
+            $("#add_error").css('display','block');
+            return false;
+         }
+         return true;
+      }
+  </script>
+
+</html>
+
+
+
